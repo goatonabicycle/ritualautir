@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://ryloqukt2276"]
+
+[ext_resource type="Script" uid="uid://bdwcqfh7b77de" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="AudioStream" uid="uid://deyuvmq6vpo5v" path="res://Roomy Hall.wav" id="2_h2yge"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0xm2m")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 546.0
+offset_top = 326.0
+offset_right = 624.0
+offset_bottom = 357.0
+text = "Click me!"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_h2yge")
+volume_db = -14.463
+pitch_scale = 1.65
+mix_target = 1
+max_polyphony = 16
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 551.0
+offset_top = 219.0
+offset_right = 612.0
+offset_bottom = 242.0
+text = "Score: 0"
