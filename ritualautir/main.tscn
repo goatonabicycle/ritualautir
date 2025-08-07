@@ -81,9 +81,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -75.0
-offset_top = -160.0
+offset_top = 95.0
 offset_right = 75.0
-offset_bottom = -100.0
+offset_bottom = 155.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 24
@@ -108,16 +108,81 @@ theme_override_font_sizes/font_size = 32
 text = "+1"
 horizontal_alignment = 1
 
-[node name="HeartbeatIndicator" type="ColorRect" parent="GameArea/CenterContainer/RitualCircle"]
+[node name="RhythmBar" type="Control" parent="GameArea/CenterContainer/RitualCircle"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_right = 150.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BarBackground" type="ColorRect" parent="GameArea/CenterContainer/RitualCircle/RhythmBar"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 268.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.6, 0.1, 0.1, 0.3)
+color = Color(0.2, 0.2, 0.25, 0.8)
+
+[node name="LeftZone" type="ColorRect" parent="GameArea/CenterContainer/RitualCircle/RhythmBar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_right = 30.0
+offset_bottom = 20.0
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.3, 0.6, 0.3, 0.5)
+
+[node name="RightZone" type="ColorRect" parent="GameArea/CenterContainer/RitualCircle/RhythmBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -20.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.3, 0.6, 0.3, 0.5)
+
+[node name="MovingBlock" type="ColorRect" parent="GameArea/CenterContainer/RitualCircle/RhythmBar"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -15.0
+offset_right = 10.0
+offset_bottom = 15.0
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.9, 0.9, 0.9, 1)
+
+[node name="ClickShadow" type="ColorRect" parent="GameArea/CenterContainer/RitualCircle/RhythmBar"]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -15.0
+offset_right = 10.0
+offset_bottom = 15.0
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.5, 0.5, 0.5, 0.6)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_h2yge")
