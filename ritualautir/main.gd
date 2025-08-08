@@ -19,6 +19,7 @@ func _ready():
 func _process(delta):
 	timer += delta
 	move_block()
+	add_floating_particles(delta)
 	add_passive_energy(delta)
 	decay_multiplier(delta)
 	update_ui()
@@ -27,6 +28,10 @@ func move_block():
 	var position_in_cycle = fmod(timer / 2.0, 1.0)
 	var x = sin(position_in_cycle * TAU) * 145 + 145
 	moving_block.position.x = x
+
+func add_floating_particles(delta):
+	if randf() < 0.02 * multiplier:
+		spawn_energy_particle()
 
 func add_passive_energy(delta):
 	energy += 0.2 * multiplier * delta
@@ -151,3 +156,22 @@ func flash_zone(zone):
 	tween.tween_property(zone, "modulate:a", 1.5, 0.1)
 	tween.tween_property(zone, "modulate:a", 1.0, 0.2)
 	tween.tween_callback(func(): zone.color = Color(0.3, 0.6, 0.3, 0.5))
+
+func spawn_energy_particle():
+	var particle = ColorRect.new()
+	$GameArea/CenterContainer/RitualCircle.add_child(particle)
+	particle.size = Vector2(4, 4)
+	particle.color = Color(randf_range(0.8, 1.0), randf_range(0.6, 0.9), 0.2, 0.8)
+	particle.position = Vector2(randf_range(50, 350), 300)
+	
+	var target_y = randf_range(50, 150)
+	var drift_x = randf_range(-30, 30)
+	var duration = randf_range(2.0, 3.5)
+	
+	var tween = create_tween()
+	tween.set_parallel()
+	tween.tween_property(particle, "position:y", target_y, duration).set_ease(Tween.EASE_OUT)
+	tween.tween_property(particle, "position:x", particle.position.x + drift_x, duration)
+	tween.tween_property(particle, "modulate:a", 0.0, duration)
+	tween.tween_property(particle, "scale", Vector2(0.5, 0.5), duration)
+	tween.chain().tween_callback(func(): particle.queue_free())
