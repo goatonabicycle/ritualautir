@@ -12,14 +12,19 @@ var timer = 0.0
 @onready var left_zone = $GameArea/CenterContainer/RitualCircle/RhythmBar/LeftZone
 @onready var right_zone = $GameArea/CenterContainer/RitualCircle/RhythmBar/RightZone
 @onready var click_shadow = $GameArea/CenterContainer/RitualCircle/RhythmBar/ClickShadow
+@onready var rhythm_bar = $GameArea/CenterContainer/RitualCircle/RhythmBar
 
 func _ready():
 	summon_button.pressed.connect(on_click)
 
+func _input(event):
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().change_scene_to_file("res://menu.tscn")
+
 func _process(delta):
 	timer += delta
 	move_block()
-	add_floating_particles(delta)
+	pulse_rhythm_bar(delta)
 	add_passive_energy(delta)
 	decay_multiplier(delta)
 	update_ui()
@@ -29,9 +34,12 @@ func move_block():
 	var x = sin(position_in_cycle * TAU) * 145 + 145
 	moving_block.position.x = x
 
-func add_floating_particles(delta):
-	if randf() < 0.02 * multiplier:
-		spawn_energy_particle()
+func pulse_rhythm_bar(delta):
+	if rhythm_bar:
+		var base_scale = 1.0
+		var pulse_amount = 0.02 * min(multiplier / 3.0, 1.0)
+		var pulse = sin(timer * 3.0) * pulse_amount + base_scale
+		rhythm_bar.scale.y = pulse
 
 func add_passive_energy(delta):
 	energy += 0.2 * multiplier * delta
@@ -46,8 +54,9 @@ func update_ui():
 func on_click():
 	var block_x = moving_block.position.x + 5
 	var distance_to_edge = min(block_x, 290 - block_x)
+	var is_left_side = block_x < 145
 	
-	play_sound(distance_to_edge)
+	play_sound(distance_to_edge, is_left_side)
 	show_shadow()
 	
 	var zone = get_hit_zone(block_x)
@@ -95,8 +104,12 @@ func calculate_reward(distance, zone):
 			"text": "MISS"
 		}
 
-func play_sound(distance):
-	click_sound.pitch_scale = 1.2 + (1.0 - distance / 150.0) * 0.6
+func play_sound(distance, is_left):
+	if is_left:
+		click_sound.pitch_scale = 0.8 + (1.0 - distance / 150.0) * 0.3
+	else:
+		click_sound.pitch_scale = 6.4 + (1.0 - distance / 150.0) * 0.6
+	
 	click_sound.volume_db = -14 + max(0, (50 - distance) / 10)
 	click_sound.play()
 
@@ -156,22 +169,3 @@ func flash_zone(zone):
 	tween.tween_property(zone, "modulate:a", 1.5, 0.1)
 	tween.tween_property(zone, "modulate:a", 1.0, 0.2)
 	tween.tween_callback(func(): zone.color = Color(0.3, 0.6, 0.3, 0.5))
-
-func spawn_energy_particle():
-	var particle = ColorRect.new()
-	$GameArea/CenterContainer/RitualCircle.add_child(particle)
-	particle.size = Vector2(4, 4)
-	particle.color = Color(randf_range(0.8, 1.0), randf_range(0.6, 0.9), 0.2, 0.8)
-	particle.position = Vector2(randf_range(50, 350), 300)
-	
-	var target_y = randf_range(50, 150)
-	var drift_x = randf_range(-30, 30)
-	var duration = randf_range(2.0, 3.5)
-	
-	var tween = create_tween()
-	tween.set_parallel()
-	tween.tween_property(particle, "position:y", target_y, duration).set_ease(Tween.EASE_OUT)
-	tween.tween_property(particle, "position:x", particle.position.x + drift_x, duration)
-	tween.tween_property(particle, "modulate:a", 0.0, duration)
-	tween.tween_property(particle, "scale", Vector2(0.5, 0.5), duration)
-	tween.chain().tween_callback(func(): particle.queue_free())
