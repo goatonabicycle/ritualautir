@@ -31,7 +31,7 @@ func _process(delta):
 
 func move_block():
 	var position_in_cycle = fmod(timer / 2.0, 1.0)
-	var x = sin(position_in_cycle * TAU) * 145 + 145
+	var x = sin(position_in_cycle * TAU) * 172 + 172
 	moving_block.position.x = x
 
 func pulse_rhythm_bar(delta):
@@ -52,9 +52,9 @@ func update_ui():
 	multiplier_label.text = "x%.1f" % multiplier
 
 func on_click():
-	var block_x = moving_block.position.x + 5
-	var distance_to_edge = min(block_x, 290 - block_x)
-	var is_left_side = block_x < 145
+	var block_x = moving_block.position.x + 8
+	var distance_to_edge = min(block_x, 344 - block_x)
+	var is_left_side = block_x < 172
 	
 	play_sound(distance_to_edge, is_left_side)
 	show_shadow()
@@ -69,7 +69,7 @@ func on_click():
 	flash_zone(zone)
 
 func get_hit_zone(block_x):
-	if block_x < 145:
+	if block_x < 172:
 		return left_zone
 	else:
 		return right_zone
